@@ -220,6 +220,25 @@
 <h2 id="静态文件"><a href="#静态文件" class="headerlink" title="静态文件"></a>静态文件</h2><p>在开发过程中，一般将图片，css，js文件当静态文件处理</p>
 <p>在app目录下新建static文件夹，将静态文件放入该文件夹中，更新静态文件需要重启服务</p>
 <p>其中静态文件可以使用<code>&#123;% load static %&#125;</code>来进行加载和修改，具体修改位置在settings中的<code>STATIC_URL</code>中</p>
+<h2 id="模板语法"><a href="#模板语法" class="headerlink" title="模板语法"></a>模板语法</h2><p>本质上：在HTML中写一些占位符，由数据对占位符进行替换和处理，在views中传入字典参数来控制变量，在HTML中使用双大括号括住对应字符</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">tpl</span>(<span class="params">request</span>):</span><br><span class="line">    name = <span class="string">&quot;14Si&quot;</span></span><br><span class="line">    <span class="keyword">return</span> render(request, <span class="string">&quot;tpl.html&quot;</span>, &#123;<span class="string">&quot;n1&quot;</span>:name&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>MyNameIs&#123;&#123;n1&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>对于数组，可以使用<code>&#123;&#123;arr.0&#125;&#125;</code>的方式获取，也可以通过</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% for item in arr %&#125;</span><br><span class="line">    <span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;&#123;item&#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">&#123;% endfor %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而对于字典来说也可以这样做</p>
+<p>想获取值，使用<code>a.value</code>，想获取键，使用<code>a.key</code>，想获取键值对，使用<code>for k, v in a.items</code></p>
+<p>模板语法还支持条件语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;%if n == 1%&#125;</span><br><span class="line">	...</span><br><span class="line">&#123;%else%&#125;</span><br><span class="line">	...</span><br><span class="line">&#123;%endif%&#125;</span><br></pre></td></tr></table></figure>
+
+<p>视图函数的render内部</p>
+<ol>
+<li>读取含有模板语法的HTML文件</li>
+<li>内部进行渲染</li>
+</ol>
+<p>最终得到只含有HTML标签的字符串</p>
 
       
 
