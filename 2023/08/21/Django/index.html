@@ -16,7 +16,7 @@
 <meta property="og:description" content="Django教程参考视频 安装： pip install django 创建项目 Django中项目会有一些默认的文件和默认的文件夹   打开终端或命令行窗口  进入对应目录  执行命令创建项目 &quot;django路径&quot; startproject 项目名 配置了环境变量可以直接使用 django-admin startproject 项目名   默认项目的文件介绍 12345678">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-08-21T03:12:34.000Z">
-<meta property="article:modified_time" content="2023-08-22T06:07:13.665Z">
+<meta property="article:modified_time" content="2023-08-23T07:31:16.402Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Django">
 <meta name="twitter:card" content="summary">
@@ -242,6 +242,79 @@
 <li>内部进行渲染</li>
 </ol>
 <p>最终得到只含有HTML标签的字符串</p>
+<h2 id="请求和响应"><a href="#请求和响应" class="headerlink" title="请求和响应"></a>请求和响应</h2><p>request是一个对象，封装了用户通过浏览器发送过来的数据</p>
+<h3 id="请求"><a href="#请求" class="headerlink" title="请求"></a>请求</h3><p><code>request.method</code>返回用户请求方式GET&#x2F;POST</p>
+<p>在URL上传递一些值时可以使用<code>request.GET</code>获取</p>
+<p><code>request.POST</code>通过请求体传递数据</p>
+<h3 id="相应"><a href="#相应" class="headerlink" title="相应"></a>相应</h3><p><code>return HttpResponse</code>返回字符串</p>
+<p>也可以<code>return render</code>返回页面</p>
+<p><code>return redirect</code>可以直接返回URL，跳转到对应的URL</p>
+<h3 id="案例：用户登录"><a href="#案例：用户登录" class="headerlink" title="案例：用户登录"></a>案例：用户登录</h3><p>views.py</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">def login(request):</span><br><span class="line">    if(request.method == &#x27;GET&#x27;):</span><br><span class="line">        return render(request, &quot;login.html&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(request.POST)</span><br><span class="line">        userName = request.POST.get(&quot;user&quot;)</span><br><span class="line">        password = request.POST.get(&quot;pwd&quot;)</span><br><span class="line">        if(userName == &#x27;1&#x27; and password == &#x27;1&#x27;):</span><br><span class="line">            return HttpResponse(&#x27;登录成功&#x27;)</span><br><span class="line">        else:</span><br><span class="line">            return HttpResponse(&#x27;登录失败&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>urls.py</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">path(&#x27;login/&#x27;, views.login),</span><br></pre></td></tr></table></figure>
+
+<p>只完成上面两步会出现403报错</p>
+<p>在<code>form</code>表单里写上<code>&#123;% csrf_token %&#125;</code>即可</p>
+<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><ul>
+<li><p>MySQL + pymysql</p>
+</li>
+<li><p>Django开发操作数据库（ORM框架）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install mysqlclient</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建，修改和删除数据库的表，不用写SQL语句，不能创建数据库</p>
+</li>
+<li><p>操作表中的数据</p>
+</li>
+</ul>
+<h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><ul>
+<li><p>启动MySQL服务</p>
+</li>
+<li><p>自带工具创建数据库</p>
+<p><code>create database user_info default charset utf8 collate utf8_general_ci;</code></p>
+<h3 id="Django连接数据库"><a href="#Django连接数据库" class="headerlink" title="Django连接数据库"></a>Django连接数据库</h3></li>
+</ul>
+<p>在<code>settings.py</code>文件中进行配置和修改</p>
+<p>修改<code>DATABASES</code>项</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DATABASES = &#123;</span><br><span class="line">    <span class="string">&#x27;default&#x27;</span>: &#123;</span><br><span class="line">        <span class="string">&#x27;ENGINE&#x27;</span>: <span class="string">&#x27;django.db.backends.mysql&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;NAME&#x27;</span>: <span class="string">&#x27;mysql57&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;USER&#x27;</span>: <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PASSWORD&#x27;</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;HOST&#x27;</span>: <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;PORT&#x27;</span>: <span class="number">3306</span>,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DATABASES</span><br><span class="line">	default</span><br><span class="line">		ENGING		# 连接的数据库</span><br><span class="line">		NAME		# 数据库名字</span><br><span class="line">		USER		# 用户</span><br><span class="line">		PASSWORD	# 密码</span><br><span class="line">		HOST		# 数据库服务器主机</span><br><span class="line">		PORT		# 端口 3306</span><br></pre></td></tr></table></figure>
+
+<h3 id="Django操作表"><a href="#Django操作表" class="headerlink" title="Django操作表"></a>Django操作表</h3><ul>
+<li>创建表</li>
+<li>删除表</li>
+<li>修改表</li>
+</ul>
+<h4 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h4><p>在<code>models.py</code>中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">from django.dp import models</span><br><span class="line"></span><br><span class="line">class UserInfo(models.Model):</span><br><span class="line">	name = models.CharField(max_length=32)			# 字符串类型</span><br><span class="line">	password = models.CharField(max_length=64)</span><br><span class="line">	age = models.IntegerField()						# 整型</span><br><span class="line">	</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">create table app01_userinfo(</span><br><span class="line">	id bigint auto_increment primary key,		# 自动添加</span><br><span class="line">	name varchar(32),</span><br><span class="line">	password varchar(64),</span><br><span class="line">	age int</span><br><span class="line">)</span><br><span class="line">&#x27;&#x27;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>在终端执行命令：</p>
+<p><code>python manage.py makemigrations</code></p>
+<p><code>python manage.py migrate</code></p>
+<p>在已有表中新建项会跳出两个选项，一是选择默认值，二是退出，不修改表</p>
+<p>也可以通过设置默认值跳过警告，设置参数<code>default=2</code></p>
+<p>如果想让项允许为空，设置参数<code>null=True, blank=True</code></p>
+<h4 id="操作表中数据"><a href="#操作表中数据" class="headerlink" title="操作表中数据"></a>操作表中数据</h4><h5 id="添加数据"><a href="#添加数据" class="headerlink" title="添加数据"></a>添加数据</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserInfo.object.create(name=&#x27;1&#x27;, password=&#x27;123&#x27;,age=18)</span><br></pre></td></tr></table></figure>
+
+<p>可以将上面的过程在<code>views.py</code>中完成</p>
+<h5 id="删除数据"><a href="#删除数据" class="headerlink" title="删除数据"></a>删除数据</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UserInfo.object.filter(id=3).delete()	# 删除id为3的数据</span><br><span class="line">UserInfo.object.all().delete()			# 删除所有数据</span><br></pre></td></tr></table></figure>
+
+<h5 id="获取数据"><a href="#获取数据" class="headerlink" title="获取数据"></a>获取数据</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QuerySet = UserInfo.object.all()</span><br><span class="line">for obj in QuerySet:</span><br><span class="line">	print(obj.id, obj.name, obj.password, obj.age)</span><br></pre></td></tr></table></figure>
+
+<h5 id="更新数据"><a href="#更新数据" class="headerlink" title="更新数据"></a>更新数据</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserInfo.object.filter(name=&#x27;1&#x27;).update(password=&#x27;999&#x27;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="案例：用户管理"><a href="#案例：用户管理" class="headerlink" title="案例：用户管理"></a>案例：用户管理</h2><ol>
+<li>用户列表<ul>
+<li>url</li>
+<li>函数<ul>
+<li>获取用户信息</li>
+<li>HTML渲染</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
 
       
 
